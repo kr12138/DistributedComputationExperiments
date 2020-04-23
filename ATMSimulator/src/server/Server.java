@@ -73,8 +73,8 @@ public class Server {
         // 把事先创建的RemoteServceImpl 对象加人到服务器的缓存中
         // 在服务注册中心注册服务
         for(;;) {
-        server.register(CLASS_PATH+"RPCService", new RPCServiceImpl());
-        server.exportService(); // 打开网络端口，接受外部请求，执行服务功能，返回结果
+            server.register(CLASS_PATH+"RPCService", new RPCServiceImpl());
+            server.exportService(); // 打开网络端口，接受外部请求，执行服务功能，返回结果
         }
     }
 

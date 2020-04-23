@@ -16,7 +16,7 @@ public class Client {
         RPCService service;
         String result;
 
-        Login.build(new JFrame());
+        new ATM(new JFrame());
 
 //        service = new RPCServiceImpl();
 //        result = service.request("你好！");

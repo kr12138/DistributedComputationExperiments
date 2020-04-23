@@ -1,4 +1,4 @@
-package client;
+package rpc;
 
 import java.io.*;
 import java.net.Socket;

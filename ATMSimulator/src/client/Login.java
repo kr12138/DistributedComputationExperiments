@@ -1,5 +1,7 @@
 package client;
 
+import dao.DAOException;
+import rpc.DynamicProxyFactory;
 import rpc.RPCService;
 
 import javax.swing.*;
@@ -12,40 +14,47 @@ public class Login {
     private JPanel panel1;
     private JButton 返回Button;
     private JButton 查询Button;
-    private JTextField password;
-    private JLabel 插卡Button;
+    private JTextField number;
     private JButton 取款Button;
     private JTextField card;
     private JButton 退卡Button;
     private JButton 存款Button;
     private JButton 登录Button;
-
+    private JTextField cash;
+    private JLabel 现金Label;
+    @Deprecated
     public Login() {
         返回Button.setEnabled(false);
         查询Button.setEnabled(false);
-        插卡Button.setEnabled(false);
         取款Button.setEnabled(false);
         退卡Button.setEnabled(false);
         存款Button.setEnabled(false);
-//        登录Button.setEnabled(false);
+        现金Label.setEnabled(false);
+        cash.setEnabled(false);
 
-        登录Button.addActionListener(e -> {
+        card.setText("8848");
+        number.setText("123");
+
+        登录Button.addActionListener(E -> {
             RPCService service = DynamicProxyFactory.getProxy(RPCService.class, host, port);
-            ATM.build(new JFrame());
-            String result = service.request("你好！");
-            System.out.println("动态代理+网络封装方式的远程执行结果为："+result);
-            screen.setText(result);
+//            service.hello(card.getText()+" 用户想要登录");
+            String name = card.getText();
+            long password = Long.parseLong(number.getText());
+            try {
+                int t = service.login(name, password);
+                if (t > 0)
+                    new ATM(new JFrame());
+//                    ATM.main(new JFrame());
+            } catch (DAOException e) {
+                e.printStackTrace();
+            }
+        });
+        退卡Button.addActionListener(E -> {
+            JFrame frame = (JFrame) panel1.getParent().getParent().getParent();
+            frame.dispose();
         });
     }
-
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("Login");
-        frame.setContentPane(new Login().panel1);
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.pack();
-        frame.setVisible(true);
-    }
-
+    @Deprecated
     public static void build(JFrame frame) {
         frame.setTitle("Login");
         frame.setContentPane(new Login().panel1);

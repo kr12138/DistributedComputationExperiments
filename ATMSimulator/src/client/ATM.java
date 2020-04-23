@@ -1,51 +1,185 @@
 package client;
 
+import dao.DAOException;
+import rpc.DynamicProxyFactory;
 import rpc.RPCService;
 
 import javax.swing.*;
 
 public class ATM {
-    private final static String host = "localhost";
-    private final static int port = 8000;
-
-    private JTextArea screen;
     private JPanel panel1;
-    private JButton 返回Button;
+    private JLabel screen;
     private JButton 查询Button;
-    private JTextField password;
-    private JLabel 插卡Button;
-    private JButton 取款Button;
-    private JTextField textField2;
-    private JButton 退卡Button;
     private JButton 存款Button;
+    private JButton 取款Button;
+    private JButton 返回Button;
+    private JButton 退卡Button;
     private JButton 登录Button;
+    private JLabel 输入数字Label;
+    private JTextField number;
+    private JLabel 插卡Label;
+    private JTextField card;
+    private JLabel 现金Label;
+    private JTextField cash;
+
+    @Deprecated
+    private JFrame getFrame() {
+        return (JFrame) panel1.getParent().getParent().getParent();
+    }
+    private RPCService getService() {
+        return DynamicProxyFactory.getProxy(RPCService.class);
+    }
 
     public ATM() {
-        返回Button.addActionListener(e -> {
-            RPCService service = DynamicProxyFactory.getProxy(RPCService.class, host, port);
-            String result = service.request("你好！");
-            System.out.println("动态代理+网络封装方式的远程执行结果为："+result);
-            screen.setText(screen.getText()+"\n"+result);
+        new ATM(new JFrame());
+    }
+    public ATM(JFrame frame) {
+//        JFrame frame = getFrame();
+        RPCService service = getService();
+        wait(frame);
+
+        返回Button.addActionListener(E -> main(frame));
+        退卡Button.addActionListener(E -> login(frame));
+        登录Button.addActionListener(E -> {
+            String name = card.getText();
+            long password = Long.parseLong(number.getText());
+            wait(frame);
+            try {
+                int t = service.login(name, password);
+                if (t > 0)
+                    main(frame);
+                else
+                    login(frame);
+            } catch (DAOException e) {
+                e.printStackTrace();
+            }
         });
-    }
+        查询Button.addActionListener(E -> {
+            String name = card.getText();
+            wait(frame);
+            try {
+                long t = service.query(name);
+                if (t >= 0)
+                    hint(frame, "查询成功，当前账户余额为："+t);
+                else
+                    hint(frame, "查询失败"+t);
+            } catch (DAOException e) {
+                e.printStackTrace();
+            }
+        });
+        存款Button.addActionListener(E -> {
+            if (cash.isEnabled()) {
+                long l = Long.parseLong(cash.getText());
+                String name = card.getText();
+                try {
+                    long t = service.save(name, l);
+                    if (t >= 0)
+                        hint(frame, "存款成功，当前账户余额为："+t);
+                    else
+                        hint(frame, "存款失败");
+                } catch (DAOException e) {
+                    e.printStackTrace();
+                }
+            } else
+                save(frame);
+        });
+        取款Button.addActionListener(E -> {
+            if (number.isEnabled()) {
+                long l = Long.parseLong(number.getText());
+                String name = card.getText();
+                try {
+                    long t = service.withdraw(name, l);
+                    if (t >= 0)
+                        hint(frame, "取款成功，当前账户余额为："+t);
+                    else
+                        hint(frame, "取款失败");
+                } catch (DAOException e) {
+                    e.printStackTrace();
+                }
+            } else
+                withdraw(frame);
+        });
 
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("ATM");
-        frame.setContentPane(new ATM().panel1);
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        login(frame);
+        frame.setContentPane(panel1);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
     }
 
-    public static void build(JFrame frame) {
+    public void wait(JFrame frame) {
+        frame.setTitle("Waiting...");
+        screen.setText("欢迎，请选择需要的服务");
+//        screen.setEnabled(false);
+        返回Button.setEnabled(false);
+        查询Button.setEnabled(false);
+        number.setText("");
+        number.setEnabled(false);
+        插卡Label.setEnabled(false);
+        取款Button.setEnabled(false);
+        card.setEnabled(false);
+        退卡Button.setEnabled(false);
+        存款Button.setEnabled(false);
+        登录Button.setEnabled(false);
+        cash.setEnabled(false);
+        cash.setText("");
+        现金Label.setEnabled(false);
+        输入数字Label.setEnabled(false);
+        输入数字Label.setText("输入数字");
+    }
+    public void login(JFrame frame) {
+        wait(frame);
+        frame.setTitle("Login");
+        screen.setText("欢迎，请插卡，输入密码，再点击登录");
+        登录Button.setEnabled(true);
+        插卡Label.setEnabled(true);
+        card.setEnabled(true);
+        card.setText("8848");
+        输入数字Label.setText("输入密码");
+        输入数字Label.setEnabled(true);
+        number.setEnabled(true);
+        number.setText("123");
+    }
+    public void main(JFrame frame) {
+        wait(frame);
         frame.setTitle("ATM");
-        frame.setContentPane(new ATM().panel1);
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.pack();
-        frame.setVisible(true);
+        screen.setText("欢迎，请选择需要的服务");
+        查询Button.setEnabled(true);
+        存款Button.setEnabled(true);
+        取款Button.setEnabled(true);
+        退卡Button.setEnabled(true);
     }
-
-//    public static void build() {
-//
+    public void hint(JFrame frame, String hint) {
+        wait(frame);
+        frame.setTitle("hint");
+        screen.setText(hint);
+        返回Button.setEnabled(true);
+    }
+    public void save(JFrame frame) {
+        wait(frame);
+        frame.setTitle("save");
+        screen.setText("请塞入现金，再点击存款");
+        存款Button.setEnabled(true);
+        现金Label.setEnabled(true);
+        cash.setEnabled(true);
+        返回Button.setEnabled(true);
+    }
+    public void withdraw(JFrame frame) {
+        wait(frame);
+        frame.setTitle("withdraw");
+        screen.setText("请输入金额，再点击取款");
+        取款Button.setEnabled(true);
+        输入数字Label.setEnabled(true);
+        输入数字Label.setText("输入金额");
+        number.setEnabled(true);
+        返回Button.setEnabled(true);
+    }
+//    public static void main(JFrame frame) {
+//        frame.setTitle("ATM");
+//        frame.setContentPane(new ATM().panel1);
+//        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+//        frame.pack();
+//        frame.setVisible(true);
 //    }
+
 }

@@ -1,6 +1,4 @@
-package client;
-
-import rpc.RemoteCaller;
+package rpc;
 
 import java.lang.reflect.*;
 
@@ -9,7 +7,6 @@ public class DynamicProxyFactory {
 
     @SuppressWarnings("unchecked")
     public static <T> T getProxy(final Class<T> classType, final String host, final int port) {
-
         InvocationHandler handler = (proxy, method, args) -> { // invoke(Object, Method, Object[])
             Connector connector = null;
             try {
@@ -25,6 +22,12 @@ public class DynamicProxyFactory {
 
         System.out.println("代理开始执行");
         return (T) Proxy.newProxyInstance(classType.getClassLoader(), new Class<?>[]{classType}, handler);
+    }
+
+    public static <T> T getProxy(final Class<T> classType) {
+        String host = "localhost";
+        int port = 8000;
+        return getProxy(classType, host, port);
     }
 }
 
