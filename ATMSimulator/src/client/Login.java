@@ -42,8 +42,8 @@ public class Login {
             long password = Long.parseLong(number.getText());
             try {
                 int t = service.login(name, password);
-                if (t > 0)
-                    new ATM(new JFrame());
+//                if (t > 0)
+//                    new ATM(new JFrame());
 //                    ATM.main(new JFrame());
             } catch (DAOException e) {
                 e.printStackTrace();

@@ -26,16 +26,12 @@ public class ATM {
     private JFrame getFrame() {
         return (JFrame) panel1.getParent().getParent().getParent();
     }
-    private RPCService getService() {
-        return DynamicProxyFactory.getProxy(RPCService.class);
-    }
 
-    public ATM() {
+    public ATM() throws Exception {
         new ATM(new JFrame());
     }
-    public ATM(JFrame frame) {
-//        JFrame frame = getFrame();
-        RPCService service = getService();
+    public ATM(JFrame frame) throws Exception {
+        RPCService service = DynamicProxyFactory.getService();
         wait(frame);
 
         返回Button.addActionListener(E -> main(frame));
@@ -109,7 +105,7 @@ public class ATM {
 
     public void wait(JFrame frame) {
         frame.setTitle("Waiting...");
-        screen.setText("欢迎，请选择需要的服务");
+        screen.setText("");
 //        screen.setEnabled(false);
         返回Button.setEnabled(false);
         查询Button.setEnabled(false);
@@ -174,12 +170,5 @@ public class ATM {
         number.setEnabled(true);
         返回Button.setEnabled(true);
     }
-//    public static void main(JFrame frame) {
-//        frame.setTitle("ATM");
-//        frame.setContentPane(new ATM().panel1);
-//        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-//        frame.pack();
-//        frame.setVisible(true);
-//    }
 
 }

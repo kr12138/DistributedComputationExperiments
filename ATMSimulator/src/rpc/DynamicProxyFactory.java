@@ -1,9 +1,45 @@
 package rpc;
 
-import java.lang.reflect.*;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-// 动态代理类
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.*;
+import java.util.Arrays;
+import java.util.Random;
+
+// 动态代理类工厂
 public class DynamicProxyFactory {
+    private static String[] hosts;
+    private static int[] ports;
+    private static int round;
+    private static int rounds;
+    public static int getRounds() {
+        return rounds;
+    }
+    public static int[] getPorts() {
+        return ports;
+    }
+
+    public static void init() {
+        try {
+            File f = new File("./url.cfg");
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode cfg = mapper.readTree(f);
+            rounds = cfg.size();
+            System.out.println("initing... rounds="+rounds);
+            hosts = new String[rounds];
+            ports = new int[rounds];
+            for (int i=0; i<rounds; ++i) {
+                hosts[i] = cfg.get(i).get("host").asText();
+                ports[i] = cfg.get(i).get("port").asInt();
+            }
+            System.out.println(Arrays.toString(ports));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     @SuppressWarnings("unchecked")
     public static <T> T getProxy(final Class<T> classType, final String host, final int port) {
@@ -25,9 +61,29 @@ public class DynamicProxyFactory {
     }
 
     public static <T> T getProxy(final Class<T> classType) {
-        String host = "localhost";
-        int port = 8000;
-        return getProxy(classType, host, port);
+        ++round;
+        round %= rounds;
+        return getProxy(classType, hosts[round], ports[round]);
+    }
+
+    public static RPCService getService() throws Exception {
+        RPCService test = null;
+        System.out.println("getService... rounds="+rounds);
+        System.out.println(Arrays.toString(ports));
+        for (int i=0; i<rounds; ++i)
+            try {
+                test = getProxy(RPCService.class);
+                System.out.println("hello: "+test.hello("hi"));
+                if (test.hello("服务器你好吗") == null)
+                    test = null;
+                else
+                    break;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        if (test == null)
+            throw new Exception();
+        return test;
     }
 }
 
