@@ -35,20 +35,20 @@ public class Login {
         card.setText("8848");
         number.setText("123");
 
-        登录Button.addActionListener(E -> {
-            RPCService service = DynamicProxyFactory.getProxy(RPCService.class, host, port);
-//            service.hello(card.getText()+" 用户想要登录");
-            String name = card.getText();
-            long password = Long.parseLong(number.getText());
-            try {
-                int t = service.login(name, password);
-//                if (t > 0)
-//                    new ATM(new JFrame());
-//                    ATM.main(new JFrame());
-            } catch (DAOException e) {
-                e.printStackTrace();
-            }
-        });
+//        登录Button.addActionListener(E -> {
+//            RPCService service = DynamicProxyFactory.getProxy(RPCService.class, host, port);
+////            service.hello(card.getText()+" 用户想要登录");
+//            String name = card.getText();
+//            long password = Long.parseLong(number.getText());
+//            try {
+//                int t = service.login(name, password);
+////                if (t > 0)
+////                    new ATM(new JFrame());
+////                    ATM.main(new JFrame());
+//            } catch (DAOException e) {
+//                e.printStackTrace();
+//            }
+//        });
         退卡Button.addActionListener(E -> {
             JFrame frame = (JFrame) panel1.getParent().getParent().getParent();
             frame.dispose();

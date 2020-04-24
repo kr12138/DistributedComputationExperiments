@@ -16,7 +16,7 @@ public class RPCServiceImpl implements RPCService {
     @Override
     public int login(String name, long password) throws DAOException {
         Account a = new AccountDAOImpl().findByName(name);
-        return a.getPassword() == password ? 1 : 0;
+        return a.getPassword() == password ? 1 : -a.getWrongCount();
     }
 
     @Override
@@ -44,6 +44,5 @@ public class RPCServiceImpl implements RPCService {
         } else
             return -1;
     }
-
 
 }

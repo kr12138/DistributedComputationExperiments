@@ -34,7 +34,13 @@ public class ATM {
         RPCService service = DynamicProxyFactory.getService();
         wait(frame);
 
-        返回Button.addActionListener(E -> main(frame));
+        返回Button.addActionListener(E -> {
+            String hint = screen.getText();
+            if (hint != null && hint.substring(0, 4).equals("登录失败"))
+                login(frame);
+            else
+                main(frame);
+        });
         退卡Button.addActionListener(E -> login(frame));
         登录Button.addActionListener(E -> {
             String name = card.getText();
@@ -44,8 +50,10 @@ public class ATM {
                 int t = service.login(name, password);
                 if (t > 0)
                     main(frame);
+                else if (t > -3)
+                    hint(frame, "登录失败，还有"+(2+t)+"次机会");
                 else
-                    login(frame);
+                    hint(frame, "登录失败，账号已被冻结");
             } catch (DAOException e) {
                 e.printStackTrace();
             }

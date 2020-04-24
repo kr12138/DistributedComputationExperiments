@@ -1,6 +1,7 @@
 package server;
 
 import rpc.DynamicProxyFactory;
+import rpc.RPCService;
 import rpc.RemoteCaller;
 
 import java.io.*;
@@ -67,8 +68,10 @@ public class Server {
             if (remoteObject == null) {
                 throw new Exception(className+" 的远程对象不存在");
             } else {
-                result = method.invoke(remoteObject, params);
-                System.out.println("远程调用结束:remotObject:"+remoteObject.toString()+",params:"+ Arrays.toString(params));
+                RPCService service = DynamicProxyFactory.getService(RPCService.class, remoteObject);
+                result = method.invoke(service, params);
+//                result = method.invoke(remoteObject, params);
+                System.out.println("远程调用结束:remotObject:"+remoteObject.toString()+", params:"+Arrays.toString(params));
             }
         } catch (Exception e) {
             System.out.println("错误："+e.getMessage());
@@ -81,13 +84,12 @@ public class Server {
         DynamicProxyFactory.init();
         int count = DynamicProxyFactory.getRounds();
         Server[] server = new Server[count];
-        System.out.println("count:"+count);
         // 把事先创建的RemoteServceImpl 对象加人到服务器的缓存中
         // 在服务注册中心注册服务
         for (int i=0; i<count; ++i) {
             server[i] = new Server();
             server[i].register(CLASS_PATH+"RPCService", new RPCServiceImpl());
-            int I=i;
+            int I = i;
             new Thread(()-> {
                 try {
                     server[I].exportService(DynamicProxyFactory.getPorts()[I]); // 打开网络端口，接受外部请求，执行服务功能，返回结果

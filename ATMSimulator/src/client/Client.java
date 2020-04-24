@@ -30,5 +30,4 @@ public class Client {
         new ATM(new JFrame());
 
     }
-
 }
