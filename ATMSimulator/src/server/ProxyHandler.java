@@ -12,7 +12,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 
 public class ProxyHandler implements InvocationHandler {
-    private String beforeMethod = "before";
+    private String beforeMethod = "";
     private String afterMethod = "";
 
     private RPCService object;
@@ -20,14 +20,14 @@ public class ProxyHandler implements InvocationHandler {
 
     public ProxyHandler(RPCService object){
         this.object = object;
+    }
+
+    private void getAspect(String method) {
         try {
             list = (ArrayNode) new ObjectMapper().readTree(new File("./aops.cfg"));
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    private void getAspect(String method) {
         beforeMethod = "";
         afterMethod = "";
         for (int i=0; i<list.size(); ++i) {

@@ -54,7 +54,7 @@ public class DynamicProxyFactory {
             }
         };
 
-        System.out.println("代理开始执行");
+//        System.out.println("代理开始执行");
         return (T) Proxy.newProxyInstance(classType.getClassLoader(), new Class<?>[]{classType}, handler);
     }
 
@@ -67,20 +67,17 @@ public class DynamicProxyFactory {
 
     // for ATM()
     public static RPCService getService() throws Exception {
-        RPCService test = null;
+        RPCService test;
         for (int i=0; i<rounds; ++i)
             try {
                 test = getProxy(RPCService.class);
-                if (test.hello("服务器你好吗") == null)
-                    test = null;
-                else
-                    break;
+                if (test.hello("OK") != null)
+                    return test;
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        if (test == null)
-            throw new Exception();
-        return test;
+        throw new Exception();
+//        return test;
     }
 
     // for aop

@@ -83,6 +83,7 @@ public class Server {
     public static void main(String[] args) {
         DynamicProxyFactory.init();
         int count = DynamicProxyFactory.getRounds();
+        int[] port = DynamicProxyFactory.getPorts();
         Server[] server = new Server[count];
         // 把事先创建的RemoteServceImpl 对象加人到服务器的缓存中
         // 在服务注册中心注册服务
@@ -90,9 +91,9 @@ public class Server {
             server[i] = new Server();
             server[i].register(CLASS_PATH+"RPCService", new RPCServiceImpl());
             int I = i;
-            new Thread(()-> {
+            new Thread(() -> {
                 try {
-                    server[I].exportService(DynamicProxyFactory.getPorts()[I]); // 打开网络端口，接受外部请求，执行服务功能，返回结果
+                    server[I].exportService(port[I]); // 打开网络端口，接受外部请求，执行服务功能，返回结果
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

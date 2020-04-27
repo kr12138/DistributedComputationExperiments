@@ -1,8 +1,6 @@
 package client;
 
-import dao.DAOException;
 import rpc.DynamicProxyFactory;
-import rpc.RPCService;
 
 import javax.swing.*;
 
@@ -26,13 +24,25 @@ public class ATM {
     private JFrame getFrame() {
         return (JFrame) panel1.getParent().getParent().getParent();
     }
-
-    public ATM() throws Exception {
+    public ATM() {
         new ATM(new JFrame());
     }
-    public ATM(JFrame frame) throws Exception {
-        RPCService service = DynamicProxyFactory.getService();
+    public ATM(JFrame frame) {
         wait(frame);
+//        RPCService test;
+//        try {
+//            test = DynamicProxyFactory.getService();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            wait(frame);
+//            screen.setText("网络信号差，暂停服务");
+//            frame.setContentPane(panel1);
+//            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//            frame.pack();
+//            frame.setVisible(true);
+//            return ;
+//        }
+//        RPCService service = test;
 
         返回Button.addActionListener(E -> {
             String hint = screen.getText();
@@ -47,28 +57,32 @@ public class ATM {
             long password = Long.parseLong(number.getText());
             wait(frame);
             try {
-                int t = service.login(name, password);
+                int t = DynamicProxyFactory.getService().login(name, password);
                 if (t > 0)
                     main(frame);
                 else if (t > -3)
                     hint(frame, "登录失败，还有"+(2+t)+"次机会");
                 else
                     hint(frame, "登录失败，账号已被冻结");
-            } catch (DAOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
+                wait(frame);
+                screen.setText("网络信号差，暂停服务");
             }
         });
         查询Button.addActionListener(E -> {
             String name = card.getText();
             wait(frame);
             try {
-                long t = service.query(name);
+                long t = DynamicProxyFactory.getService().query(name);
                 if (t >= 0)
                     hint(frame, "查询成功，当前账户余额为："+t);
                 else
                     hint(frame, "查询失败"+t);
-            } catch (DAOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
+                wait(frame);
+                screen.setText("网络信号差，暂停服务");
             }
         });
         存款Button.addActionListener(E -> {
@@ -76,13 +90,15 @@ public class ATM {
                 long l = Long.parseLong(cash.getText());
                 String name = card.getText();
                 try {
-                    long t = service.save(name, l);
+                    long t = DynamicProxyFactory.getService().save(name, l);
                     if (t >= 0)
                         hint(frame, "存款成功，当前账户余额为："+t);
                     else
                         hint(frame, "存款失败");
-                } catch (DAOException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
+                    wait(frame);
+                    screen.setText("网络信号差，暂停服务");
                 }
             } else
                 save(frame);
@@ -92,13 +108,15 @@ public class ATM {
                 long l = Long.parseLong(number.getText());
                 String name = card.getText();
                 try {
-                    long t = service.withdraw(name, l);
+                    long t = DynamicProxyFactory.getService().withdraw(name, l);
                     if (t >= 0)
                         hint(frame, "取款成功，当前账户余额为："+t);
                     else
                         hint(frame, "取款失败");
-                } catch (DAOException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
+                    wait(frame);
+                    screen.setText("网络信号差，暂停服务");
                 }
             } else
                 withdraw(frame);
@@ -113,7 +131,7 @@ public class ATM {
 
     public void wait(JFrame frame) {
         frame.setTitle("Waiting...");
-        screen.setText("");
+        screen.setText("请稍等...");
 //        screen.setEnabled(false);
         返回Button.setEnabled(false);
         查询Button.setEnabled(false);
@@ -178,5 +196,4 @@ public class ATM {
         number.setEnabled(true);
         返回Button.setEnabled(true);
     }
-
 }
