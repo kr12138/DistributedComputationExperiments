@@ -94,9 +94,9 @@ public class HelloController {
     public String mysqlGetUser() throws JsonProcessingException {
         if (userRepo.findAll().isEmpty()) {
             User user = new User();
-            user.setBalance(10000);
-            user.setName("admin");
-            user.setPassword("pswd");
+            user.setBalance(1234500);
+            user.setName("user1");
+            user.setPassword("password1");
             userRepo.save(user);
         }
         return new ObjectMapper().writeValueAsString(userRepo.findAll());

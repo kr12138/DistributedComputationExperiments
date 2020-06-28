@@ -7,11 +7,9 @@ import com.booking.demo.rpc.PayService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -29,10 +27,17 @@ public class FlightController {
     }
 
     @RequestMapping(value = "/query")
-    public String query(@RequestParam String id,
-                        @RequestParam String departure,
-                        @RequestParam String destination,
-                        @RequestParam String time) throws JsonProcessingException {
+    public String query(@RequestBody HashMap<String, String> data
+//                        @RequestParam String id,
+//                        @RequestParam String departure,
+//                        @RequestParam String destination,
+//                        @RequestParam String time
+    ) throws JsonProcessingException {
+        String id = data.get("id");
+        String departure = data.get("departure");
+        String destination = data.get("destination");
+        String time = data.get("time");
+
         System.out.println(" querying: " + id + "," + departure + "," + destination + "," + time);
         List<Flight> flights = flightService.query(id, departure, destination, time);
         System.out.println("  " + flights.size() + " flights found");
@@ -42,8 +47,12 @@ public class FlightController {
     }
 
     @RequestMapping(value = "/order")
-    public String order(@RequestParam long uid,
-                        @RequestParam String fid) throws JsonProcessingException {
+    public String order(@RequestBody HashMap<String, String> data
+//            @RequestParam long uid,
+//            @RequestParam String fid
+    ) throws JsonProcessingException {
+        long uid = Long.parseLong(data.get("uid"));
+        String fid = data.get("fid");
         System.out.println(" " + uid + " ordering: " + fid);
         MyResponse response = flightService.order(uid, fid);
         String json = objectMapper.writeValueAsString(response);

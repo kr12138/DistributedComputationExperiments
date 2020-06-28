@@ -9,7 +9,7 @@ import java.io.Serializable;
 @Getter
 @Setter
 @Entity
-@Table(name = "flight")
+@Table(name = "ticket")
 @IdClass(TicketPK.class)
 public class Ticket implements Serializable {
     @Id
