@@ -16,7 +16,7 @@ import java.util.*;
 
 @Service
 public class FlightServiceImpl implements FlightService {
-    private final FlightRepo flightrepo;
+    private final FlightRepo flightRepo;
     private final TicketRepo ticketRepo;
     private final RedisTemplate<String, Object> redisTemplate;
     @Autowired
@@ -24,7 +24,7 @@ public class FlightServiceImpl implements FlightService {
 
     @Autowired
     public FlightServiceImpl(FlightRepo flightRepo, TicketRepo ticketRepo, RedisTemplate<String, Object> redisTemplate) {
-        this.flightrepo = flightRepo;
+        this.flightRepo = flightRepo;
         this.ticketRepo = ticketRepo;
         this.redisTemplate = redisTemplate;
     }
@@ -96,11 +96,16 @@ public class FlightServiceImpl implements FlightService {
             else if ("余额不足".equals(result.getMsg()))
                 return MyResponse.fail("余额不足");
         }
+
         Ticket ticket = new Ticket();
         ticket.setFid(fid);
         ticket.setUid(uid);
         ticket.setTime(TimeConfig.now());
         ticketRepo.save(ticket);
+
+        flight.setCount(flight.getCount() - 1);
+        redisTemplate.opsForValue().set("flight:" + fid, flight);
+
         return MyResponse.success("当前余额：" + result.getData());
     }
 

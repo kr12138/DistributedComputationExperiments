@@ -13,7 +13,7 @@
                     <b-button variant="info" @click=" logout "> 确定 </b-button>
                 </b-col>
                 <b-col md="2">
-                    <b-button variant="info" @click=" cancel "> 取消 </b-button>
+                    <b-button variant="light" @click=" cancel "> 取消 </b-button>
                 </b-col>
             </b-row>
         </b-container>

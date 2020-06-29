@@ -12,7 +12,7 @@ import java.io.Serializable;
 @Table(name = "flight")
 public class Flight implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+//    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column
     String id;
 

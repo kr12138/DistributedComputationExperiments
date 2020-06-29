@@ -1,12 +1,10 @@
 <template>
-    <div>
-        coming soon
-    </div>
+    <router-view> </router-view>
 </template>
 
 <script>
     export default {
-        name: "loginModal"
+        name: "payNav"
     }
 </script>
 

@@ -11,6 +11,7 @@ const routes = [
     {
         path: '/home',
         meta: {title: '主页'},
+        redirect: '/home/info',
         component: () => import('../views/home.vue'),
         children:
         [
@@ -28,6 +29,11 @@ const routes = [
                 path: 'logout',
                 meta: {title: '登出'},
                 component: () => import('../components/login/logout.vue')
+            },
+            {
+                path: 'register',
+                meta: {title: '注册'},
+                component: () => import('../components/login/register.vue')
             }
         ]
     },
@@ -38,9 +44,13 @@ const routes = [
         children:
         [
             {
+                path: 'search',
+                meta: {title: '搜索航班'},
+                component: () => import('../components/flight/flightSearch.vue')
+            },
+            {
                 path: 'view',
                 meta: {title: '浏览航班'},
-                // component: flightView
                 component: () => import('../components/flight/flightView.vue')
             },
             {
@@ -50,7 +60,29 @@ const routes = [
             },
         ]
     },
-
+    {
+        path: '/pay',
+        redirect: '/pay/user',
+        component: () => import('../components/pay/payNav.vue'),
+        children:
+            [
+                {
+                    path: 'user',
+                    meta: {title: '用户余额'},
+                    component: () => import('../components/pay/payUser.vue')
+                },
+                {
+                    path: 'history',
+                    meta: {title: '历史订单'},
+                    component: () => import('../components/pay/payHistory.vue')
+                },
+                {
+                    path: 'settings',
+                    meta: {title: '用户设置'},
+                    component: () => import('../components/pay/paySettings.vue')
+                },
+            ]
+    },
   // {
   //   path: '/about',
   //   name: 'About',

@@ -55,18 +55,23 @@ public class HelloController {
         System.out.println("end...");
     }
 
-    @RequestMapping(value = "/redis/init/{id}/{departure}/{destination}/{time}")
+    @RequestMapping(value = "/redis/init/{id}/{departure}/{destination}/{time}/{price}/{count}")
     public void redisInit(@PathVariable String id,
-                         @PathVariable String departure,
-                         @PathVariable String destination,
-                         @PathVariable String time) {
+                          @PathVariable String departure,
+                          @PathVariable String destination,
+                          @PathVariable String time,
+                          @PathVariable long price,
+                          @PathVariable long count
+    ) {
+        System.out.println("initing: " + id + " " + departure + " " + destination + " " + time + " " + price + " " + count);
+
         Flight flight = new Flight();
         flight.setId(id);
         flight.setDeparture(departure);
         flight.setDestination(destination);
         flight.setTime(time);
-        flight.setPrice(10000);
-        flight.setCount(100);
+        flight.setPrice(price);
+        flight.setCount(count);
 
         String ID = "flight:" + id;
         redisTemplate.opsForValue().set(ID, flight);

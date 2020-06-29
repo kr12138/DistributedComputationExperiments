@@ -10,13 +10,17 @@ import java.io.Serializable;
 @Setter
 @Entity
 @Table(name = "ticket")
-@IdClass(TicketPK.class)
+//@IdClass(TicketPK.class)
 public class Ticket implements Serializable {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    long id;
+
+//    @Id
     @JoinColumn(name = "uid")
     long uid;
 
-    @Id
+//    @Id
     @JoinColumn(name = "fid")
     String fid;
 

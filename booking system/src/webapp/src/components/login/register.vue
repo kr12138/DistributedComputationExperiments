@@ -1,13 +1,13 @@
 <template>
     <b-container>
         <br>
-        <router-view> </router-view>
+        <h4> coming soon </h4>
     </b-container>
 </template>
 
 <script>
     export default {
-        name: "flightNav"
+        name: "register"
     }
 </script>
 

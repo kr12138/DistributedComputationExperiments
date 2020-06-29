@@ -49,7 +49,7 @@ public class PayServiceImpl implements PayService {
         if (balance < cash)
             return MyResponse.fail("余额不足");
         else {
-            user.get().setBalance(user.get().getBalance() + cash);
+            user.get().setBalance(user.get().getBalance() - cash);
             userRepo.save(user.get());
             return MyResponse.success(user.get().getBalance());
         }

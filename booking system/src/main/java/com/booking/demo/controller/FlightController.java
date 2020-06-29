@@ -60,8 +60,8 @@ public class FlightController {
         return json;
     }
 
-    @RequestMapping(value = "/bought")
-    public String bought(@RequestParam long uid) throws JsonProcessingException {
+    @RequestMapping(value = "/bought/{uid}")
+    public String bought(@PathVariable long uid) throws JsonProcessingException {
         System.out.println(" " + uid + " bought... ");
         List<Flight> flights = flightService.bought(uid);
         String json = objectMapper.writeValueAsString(flights);

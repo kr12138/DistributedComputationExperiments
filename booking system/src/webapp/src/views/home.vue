@@ -1,9 +1,10 @@
 <template>
-    <div>
+    <b-container fluid>
 <!--        before home.router-view <br>-->
         <router-view> </router-view>
 <!--        after home.router-view <br>-->
-    </div>
+        <br>
+    </b-container>
 </template>
 
 <script>
