@@ -49,13 +49,13 @@
 
         methods: {
             login() {
-                // if (this.user.id !== 0 && !this.user.id) {
-                //     this.$toastr.i('请先输入账号', '提示：')
-                //     return
-                // } else if (this.user.password === undefined || this.user.password == null) {
-                //     this.$toastr.i('请先输入密码', '提示：')
-                //     return
-                // }
+                if (this.user.id !== 0 && !this.user.id) {
+                    this.$toastr.i('请先输入账号', '提示：')
+                    return
+                } else if (this.user.password === '' || this.user.password == null) {
+                    this.$toastr.i('请先输入密码', '提示：')
+                    return
+                }
 
                 // this.$axios.post(
                 //     'api/user/login', this.user

@@ -100,9 +100,12 @@
             },
 
             getData() {
-                this.searchParams.time = this.searchParams.time.substr(2)
-                this.$axios.post( 'flight/query', this.searchParams
-                ).then( response => {
+                this.$axios.post( 'flight/query', {
+                    id: this.searchParams.id,
+                    departure: this.searchParams.departure,
+                    destination: this.searchParams.destination,
+                    time: this.searchParams.time.substr(2),
+                }).then( response => {
                     console.log(response)
                     if (response.status === 200) {
                         this.$toastr.s('成功得到航班数据！')
