@@ -2,7 +2,7 @@
 
 #### 分布式计算相关内容的实验
 
-1.  ATM 模拟器
+1. ATM 模拟器
     - 服务端是使用了主要基于 Socket, ServerSocket, Thread 等类实现的分布式框架
     - 用户端基于 JetBrains 提供的基于 XML 的 GUI Form 组件
     - 使用 JSON 格式的配置文件实现了简单的热部署和 AOP
